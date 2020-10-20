@@ -36,3 +36,21 @@
     transform: rotate(360deg);
   }
 }
+
+.bg-icon{
+  background-color: #FFFFFF;
+}
+
+.right{
+  float: right;
+}
+
+.mg-10{
+  margin-top: 10px;
+}
+
+text-center{
+  text-align: center;
+}
+
+/*footer */
