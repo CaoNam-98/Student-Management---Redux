@@ -4,6 +4,7 @@ class Tasks extends Component {
     constructor(props){
         super(props);
         this.state={
+            id: '',
             mssv: '',
             tensv: '',
             diemNMLT: '',
@@ -31,6 +32,7 @@ class Tasks extends Component {
 
     onCancelForm = () => {
         this.setState({
+            id: '',
             mssv: '',
             tensv: '',
             diemNMLT: '',
@@ -40,11 +42,53 @@ class Tasks extends Component {
         });
     }
 
+    componentWillMount(){
+        var {onTaskEditing} = this.props;
+        if(onTaskEditing && onTaskEditing.id !== null){
+            this.setState({
+                id: onTaskEditing.id,
+                mssv: onTaskEditing.mssv,
+                tensv: onTaskEditing.tensv,
+                diemNMLT: onTaskEditing.diemNMLT,
+                diemLTHDT: onTaskEditing.diemLTHDT,
+                diemCTDL: onTaskEditing.diemCTDL,
+                status: onTaskEditing.status === true ? 'true' : 'false',
+            });
+        }else{
+            this.onCancelForm();
+        }
+    }
+
+    componentWillReceiveProps(nextProps){
+        if(nextProps && nextProps.onTaskEditing !== null){
+            this.setState({
+                id: nextProps.onTaskEditing.id,
+                mssv: nextProps.onTaskEditing.mssv,
+                tensv: nextProps.onTaskEditing.tensv,
+                diemNMLT: nextProps.onTaskEditing.diemNMLT,
+                diemLTHDT: nextProps.onTaskEditing.diemLTHDT,
+                diemCTDL: nextProps.onTaskEditing.diemCTDL,
+                status: nextProps.onTaskEditing.status === true ? 'true' : 'false',
+            })
+        }else{
+            this.onCancelForm();
+        }
+    }
+
+    onExitForm = () => {
+        this.props.onExitForm();
+    }
+
     render(){
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
-                    <h3 className="panel-title">Thêm Sinh Viên</h3>
+                    <h3 className="panel-title">{this.props.onTaskEditing !== null ? 'Chỉnh Sửa Sinh Viên' : 'Thêm Sinh Viên'}
+                        <span
+                            className="fa fa-times-circle text-right"
+                            onClick={this.onExitForm}
+                        ></span>
+                    </h3>
                 </div>
                 <div className="panel-body">
                     <form onSubmit={ this.onSubmitForm }>

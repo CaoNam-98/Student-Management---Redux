@@ -53,4 +53,7 @@ text-center{
   text-align: center;
 }
 
-/*footer */
+.text-right{
+  float: right;
+}
+

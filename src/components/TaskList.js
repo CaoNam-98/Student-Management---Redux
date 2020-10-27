@@ -2,10 +2,28 @@ import React, { Component } from 'react';
 import TaskItem from './TaskItem';
 
 class TaskList extends Component {
+    constructor(props){
+        super(props);
+        this.state = {
+            searchName: '',
+            searchStatus: null,
+        }
+    }
+
+    onHandleChange = (event) => {
+        var target = event.target;
+        var name = target.name;
+        var value = target.type === 'checkbox' ? target.checked : target.value;
+        this.props.SearchFilter(name === 'searchName' ? value : this.state.searchName, name === 'searchStatus' ? value : this.state.searchStatus);
+        this.setState({
+            [name]: value,
+        });
+    }
+
     render(){
         var {tasks} = this.props;
         var elements = tasks.map((item, index) => {
-            return <TaskItem key={ item.id } item={ item } index={ index + 1 } onDelete={ this.props.onDelete }/>
+            return <TaskItem key={ item.id } item={ item } index={ index + 1 } onDelete={ this.props.onDelete } onUpdate={ this.props.onUpdate }/>
         })
 
         return (
@@ -26,11 +44,11 @@ class TaskList extends Component {
                             <td></td>
                             <td></td>
                             <td>
-                                <input type="text" className="form-control" placeholder="Tìm kiếm..."/>
+                                <input type="text" className="form-control" name="searchName" placeholder="Tìm kiếm..." onChange={this.onHandleChange} />
                             </td>
                             <td></td>
                             <td>
-                                <select className="form-control">
+                                <select className="form-control" name="searchStatus" onChange={this.onHandleChange}>
                                     <option value="-1">Tất Cả</option>
                                     <option value="0">Ẩn</option>
                                     <option value="1">Kích Hoạt</option>
