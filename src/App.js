@@ -24,6 +24,18 @@ class App extends Component {
         this.onOpenForm = this.onOpenForm.bind(this);
     }
 
+    onSubmitLogin = (user) => {
+        if(user.username === this.state.userName && user.password === this.state.passWord){
+            alert('Success Login !');
+        }else{
+            alert('Check Account And PassWord, Please !');
+        }
+    }
+
+    componentWillMount(){
+        this.onGenerateData();
+    }
+
     onOpenForm(){
         if(this.state.taskEditing !== null){
             this.setState({
@@ -187,12 +199,12 @@ class App extends Component {
         // Sort theo họ tên từ bé đến lớn (a - b)
         if(sortName === 'name' && sortValue === 1){
             tasks.sort((a, b) => {
-                if(a.tensv < b.tensv){ // a.tensv nhỏ hơn b.tensv => a lên trước b
+                if(a.tensv < b.tensv){ 
                     return -1;
-                }else if(a.tensv > b.tensv){ // a.tensv lớn hơn b.tensv => b lên trước a
+                }else if(a.tensv > b.tensv){ 
                     return 1;
                 }else{
-                    return 0; // bằng nhau thì giữ nguyên
+                    return 0; 
                 }
             });
         }
@@ -200,12 +212,12 @@ class App extends Component {
         // Sort theo họ tên từ lớn đến bé (b - a)
         if(sortName === 'name' && sortValue === -1){
             tasks.sort((a, b) => {
-                if(a.tensv < b.tensv){ // a.tensv nhỏ hơn b.tensv => b lên trước a
+                if(a.tensv < b.tensv){ 
                     return 1;
-                }else if(a.tensv > b.tensv){ // a.tensv lớn hơn b.tensv => a lên trước b
+                }else if(a.tensv > b.tensv){ 
                     return -1;
                 }else{
-                    return 0; // bằng nhau thì giữ nguyên
+                    return 0; 
                 }
             });
         }
@@ -213,12 +225,12 @@ class App extends Component {
         // Sort theo status từ lớn đến bé (b-a)
         if(sortName === 'status' && sortValue === 1){
             tasks.sort((a, b) => {
-                if(a.status < b.status){ // => b đứng trước a
+                if(a.status < b.status){ 
                     return 1;
-                }else if(a.status > b.status){ // => a đứng trước b
+                }else if(a.status > b.status){ 
                     return -1;
                 }else{
-                    return 0; // bằng nhau thì giữ nguyên
+                    return 0; 
                 }
             });
         }
@@ -226,20 +238,46 @@ class App extends Component {
         // Sort theo status từ bé đến lớn (a-b)
         if(sortName === 'status' && sortValue === -1){
             tasks.sort((a, b) => {
-                if(a.status < b.status){ //a.status bé hơn b.status => a đứng trước b
+                if(a.status < b.status){ 
                     return -1;
-                }else if(a.status > b.status){  // a.status lớn hơn b.status => b đứng trước a
+                }else if(a.status > b.status){  
                     return 1;
                 }else{
-                    return 0; // bằng nhau nên giữ nguyên
+                    return 0; 
                 }
             });
+        }
+
+        // Sort theo điểm từ thấp đến cao (a-b)
+        if(sortName === 'diem' && sortValue === 1){
+            tasks.sort((a,b) => {
+                if((a.diemNMLT + a.diemLTHDT + a.diemCTDL) < (b.diemNMLT + b.diemLTHDT + b.diemCTDL)){
+                    return -1;
+                }else if((a.diemNMLT + a.diemLTHDT + a.diemCTDL) > (b.diemNMLT + b.diemLTHDT + b.diemCTDL)){
+                    return 1;
+                }else{
+                    return 0;
+                }
+            })
+        }
+
+        //Sort theo điểm từ cao đến thấp (b-a)
+        if(sortName === 'diem' && sortValue === -1){
+            tasks.sort((a,b) => {
+                if((a.diemNMLT + a.diemLTHDT + a.diemCTDL) < (b.diemNMLT + b.diemLTHDT + b.diemCTDL)){
+                    return 1;
+                }else if((a.diemNMLT + a.diemLTHDT + a.diemCTDL) > (b.diemNMLT + b.diemLTHDT + b.diemCTDL)){
+                    return -1;
+                }else{
+                    return 0;
+                }
+            })
         }
 
         var element = this.state.openForm === true ? <Tasks onSubmit={ this.onSubmit } onTaskEditing={ this.state.taskEditing } onExitForm={ this.onExitForm }/> : '';
         return (
             <div>
-                <Header />
+                <Header onSubmit={this.onSubmitLogin}/>
                 <div className="container">
                     <div className="row">
                         <div className={ this.state.openForm === true ? "col-xs-4 col-sm-4 col-md-4 col-lg-4" : ''}>

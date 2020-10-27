@@ -3,10 +3,13 @@ import React, { Component } from 'react';
 class Header extends Component {
     constructor(props){
         super(props);
-        this.state = {};
+        this.state = {
+            username: '',
+            password: '',
+        };
     }
 
-    onHandleChange(event){
+    onHandleChange = (event) => {
         var target = event.target;
         var name = target.name;
         var value = target.value;
@@ -15,8 +18,9 @@ class Header extends Component {
         })
     }
 
-    onSubmit(){
-
+    onSubmit = (event) => {
+        event.preventDefault();
+        this.props.onSubmit(this.state);
     }
 
     render(){
@@ -36,9 +40,9 @@ class Header extends Component {
                     <form className="navbar-form navbar-right">
                         <div className="form-group">
                             <input type="text" className="form-control" placeholder="UserName" name="username" onChange={ this.onHandleChange }/> &nbsp;
-                            <input type="text" className="form-control" placeholder="PassWord" name="password" onChange={ this.onHandleChange }/>
+                            <input type="password" className="form-control" placeholder="PassWord" name="password" onChange={ this.onHandleChange }/>
                         </div> &ensp;
-                        <button type="submit" className="btn btn-danger">Sign in</button>
+                        <button type="submit" className="btn btn-danger" onClick={this.onSubmit}>Sign in</button>
                     </form>
                 </div>
             </nav>         
