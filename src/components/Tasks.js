@@ -1,5 +1,8 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import * as actions from './../actions/index';
 
+// Khi render lại thì state nhận giá trị lúc khởi tạo
 class Tasks extends Component {
     constructor(props){
         super(props);
@@ -10,7 +13,7 @@ class Tasks extends Component {
             diemNMLT: '',
             diemLTHDT: '',
             diemCTDL: '',
-            status: 'true',
+            status: true,
         };
         this.onHandleChange = this.onHandleChange.bind(this);
     }
@@ -26,8 +29,9 @@ class Tasks extends Component {
 
     onSubmitForm = (event) => {
         event.preventDefault();
-        this.props.onSubmit(this.state);
+        this.props.onAddTask(this.state);
         this.onCancelForm();
+        this.onExitForm();
     }
 
     onCancelForm = () => {
@@ -38,21 +42,21 @@ class Tasks extends Component {
             diemNMLT: '',
             diemLTHDT: '',
             diemCTDL: '',
-            status: 'true',
+            status: true,
         });
     }
 
     componentWillMount(){
-        var {onTaskEditing} = this.props;
-        if(onTaskEditing && onTaskEditing.id !== null){
+        var {TaskEditing} = this.props;
+        if(TaskEditing && TaskEditing.id !== null){
             this.setState({
-                id: onTaskEditing.id,
-                mssv: onTaskEditing.mssv,
-                tensv: onTaskEditing.tensv,
-                diemNMLT: onTaskEditing.diemNMLT,
-                diemLTHDT: onTaskEditing.diemLTHDT,
-                diemCTDL: onTaskEditing.diemCTDL,
-                status: onTaskEditing.status === true ? 'true' : 'false',
+                id: TaskEditing.id,
+                mssv: TaskEditing.mssv,
+                tensv: TaskEditing.tensv,
+                diemNMLT: TaskEditing.diemNMLT,
+                diemLTHDT: TaskEditing.diemLTHDT,
+                diemCTDL: TaskEditing.diemCTDL,
+                status: TaskEditing.status === true ? 'true' : 'false',
             });
         }else{
             this.onCancelForm();
@@ -60,15 +64,16 @@ class Tasks extends Component {
     }
 
     componentWillReceiveProps(nextProps){
-        if(nextProps && nextProps.onTaskEditing !== null){
+        console.log(nextProps);
+        if(nextProps && nextProps.TaskEditing !== null){
             this.setState({
-                id: nextProps.onTaskEditing.id,
-                mssv: nextProps.onTaskEditing.mssv,
-                tensv: nextProps.onTaskEditing.tensv,
-                diemNMLT: nextProps.onTaskEditing.diemNMLT,
-                diemLTHDT: nextProps.onTaskEditing.diemLTHDT,
-                diemCTDL: nextProps.onTaskEditing.diemCTDL,
-                status: nextProps.onTaskEditing.status === true ? 'true' : 'false',
+                id: nextProps.TaskEditing.id,
+                mssv: nextProps.TaskEditing.mssv,
+                tensv: nextProps.TaskEditing.tensv,
+                diemNMLT: nextProps.TaskEditing.diemNMLT,
+                diemLTHDT: nextProps.TaskEditing.diemLTHDT,
+                diemCTDL: nextProps.TaskEditing.diemCTDL,
+                status: nextProps.TaskEditing.status,
             })
         }else{
             this.onCancelForm();
@@ -83,7 +88,7 @@ class Tasks extends Component {
         return (
             <div className="panel panel-warning">
                 <div className="panel-heading">
-                    <h3 className="panel-title">{this.props.onTaskEditing !== null ? 'Chỉnh Sửa Sinh Viên' : 'Thêm Sinh Viên'}
+                    <h3 className="panel-title">{this.props.TaskEditing.id !== '' ? 'Chỉnh Sửa Sinh Viên' : 'Thêm Sinh Viên'}
                         <span
                             className="fa fa-times-circle text-right"
                             onClick={this.onExitForm}
@@ -129,4 +134,24 @@ class Tasks extends Component {
     }
 }
 
-export default Tasks;
+const mapStateToProps = state => {
+    return {
+        TaskEditing: state.TaskEditing,
+    }
+}
+
+const mapDispatchToProps = (dispatch, props) => {
+    return {
+        onAddTask : (task) => { // 
+            dispatch(actions.addTask(task)); // actions.addTask(task) lam action cho reducers/tasks
+        },
+        onExitForm : () => {
+            dispatch(actions.closeForm());
+        },
+        updateTask : (task) => {
+            dispatch(actions.updateTask(task));
+        }
+    }
+}
+
+export default connect(mapStateToProps, mapDispatchToProps)(Tasks);
